@@ -56,3 +56,26 @@ export const pizzasDoces = [
     price: "R$ 36,90"
   }
 ];
+
+export const bebidas = [
+  {
+    name: "Coca-Cola 2L",
+    description: "Refrigerante Coca-Cola gelado, garrafa 2 litros.",
+    price: "R$ 12,90"
+  },
+  {
+    name: "Guaraná Antarctica 2L",
+    description: "Refrigerante Guaraná Antarctica gelado, garrafa 2 litros.",
+    price: "R$ 11,90"
+  },
+  {
+    name: "Suco Natural 500ml",
+    description: "Suco natural de laranja, limão ou maracujá.",
+    price: "R$ 9,90"
+  },
+  {
+    name: "Água Mineral 500ml",
+    description: "Água mineral sem gás, garrafa 500ml.",
+    price: "R$ 4,90"
+  }
+];

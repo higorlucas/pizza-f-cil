@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MenuSection from "@/components/MenuSection";
-import { pizzasTradicionais, pizzasEspeciais, pizzasDoces } from "@/data/pizzas";
+import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
+import { pizzasTradicionais, pizzasEspeciais, pizzasDoces, bebidas } from "@/data/pizzas";
 
 const Index = () => {
   return (
@@ -26,8 +27,15 @@ const Index = () => {
           emoji="🍫"
           pizzas={pizzasDoces}
         />
+        
+        <MenuSection
+          title="Bebidas"
+          emoji="🥤"
+          pizzas={bebidas}
+        />
       </main>
       
+      <WhatsAppFloatingButton />
       <Footer />
     </div>
   );
