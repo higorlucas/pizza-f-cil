@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MenuSection from "@/components/MenuSection";
 import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
-import { pizzasTradicionais, pizzasEspeciais, pizzasDoces, bebidas } from "@/data/pizzas";
+import { pizzasTradicionais, pizzasEspeciais, pizzasDoces, bebidas, cervejas, esfihas, porcoes } from "@/data/pizzas";
 
 const Index = () => {
   return (
@@ -29,9 +29,27 @@ const Index = () => {
         />
         
         <MenuSection
-          title="Bebidas"
+          title="Refrigerantes"
           emoji="🥤"
           pizzas={bebidas}
+        />
+        
+        <MenuSection
+          title="Cervejas"
+          emoji="🍺"
+          pizzas={cervejas}
+        />
+        
+        <MenuSection
+          title="Esfihas"
+          emoji="🥟"
+          pizzas={esfihas}
+        />
+        
+        <MenuSection
+          title="Porções"
+          emoji="🍟"
+          pizzas={porcoes}
         />
       </main>
       
