@@ -6,16 +6,34 @@ import { Label } from "@/components/ui/label";
 
 interface OrderFormProps {
   pizzaName: string;
-  children: React.ReactNode;
 }
 
-const OrderForm = ({ pizzaName, children }: OrderFormProps) => {
+// Formatar telefone automaticamente
+const formatPhone = (value: string): string => {
+  const numbers = value.replace(/\D/g, "");
+  
+  if (numbers.length <= 2) {
+    return numbers;
+  } else if (numbers.length <= 7) {
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+  } else if (numbers.length <= 11) {
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
+  }
+  return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+};
+
+const OrderForm = ({ pizzaName }: OrderFormProps) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
 
   const whatsappNumber = "5511981627116";
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhone(e.target.value);
+    setPhone(formatted);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,19 +52,21 @@ Aguardo confirmação! 🙏`;
     
     window.open(whatsappLink, "_blank");
     
-    // Reset form
     setName("");
     setAddress("");
     setPhone("");
     setOpen(false);
   };
 
-  const isFormValid = name.trim() && address.trim() && phone.trim();
+  const isFormValid = name.trim() && address.trim() && phone.replace(/\D/g, "").length >= 10;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {children}
+        <Button variant="ghost" className="whatsapp-button mt-1 h-auto p-3">
+          <span>📲</span>
+          Pedir no WhatsApp
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-card border-primary/20">
         <DialogHeader>
@@ -90,8 +110,8 @@ Aguardo confirmação! 🙏`;
               id="phone"
               placeholder="(11) 99999-9999"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              maxLength={20}
+              onChange={handlePhoneChange}
+              maxLength={16}
               required
             />
           </div>

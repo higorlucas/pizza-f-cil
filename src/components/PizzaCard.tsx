@@ -19,12 +19,7 @@ const PizzaCard = ({ name, description, price }: PizzaCardProps) => {
           {description}
         </p>
         
-        <OrderForm pizzaName={`${name} - ${price}`}>
-          <button className="whatsapp-button mt-1">
-            <span>📲</span>
-            Pedir no WhatsApp
-          </button>
-        </OrderForm>
+        <OrderForm pizzaName={`${name} - ${price}`} />
       </div>
     </div>
   );
