@@ -1,3 +1,5 @@
+import OrderForm from "./OrderForm";
+
 interface PizzaCardProps {
   name: string;
   description: string;
@@ -5,10 +7,6 @@ interface PizzaCardProps {
 }
 
 const PizzaCard = ({ name, description, price }: PizzaCardProps) => {
-  const whatsappNumber = "5511981627116";
-  const message = encodeURIComponent(`Olá! Quero pedir a pizza ${name}.`);
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
-
   return (
     <div className="pizza-card">
       <div className="flex flex-col gap-3">
@@ -21,15 +19,12 @@ const PizzaCard = ({ name, description, price }: PizzaCardProps) => {
           {description}
         </p>
         
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="whatsapp-button mt-1"
-        >
-          <span>📲</span>
-          Pedir no WhatsApp
-        </a>
+        <OrderForm pizzaName={`${name} - ${price}`}>
+          <button className="whatsapp-button mt-1">
+            <span>📲</span>
+            Pedir no WhatsApp
+          </button>
+        </OrderForm>
       </div>
     </div>
   );
