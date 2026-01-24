@@ -8,7 +8,7 @@ const Footer = () => {
         ⏰ Seg a Dom • 18h às 23h
       </p>
       <p className="text-muted-foreground/70 text-xs mt-4">
-        © 2024 Pizzaria Bella Napoli
+        © 2024 Chame Pizza
       </p>
     </footer>
   );

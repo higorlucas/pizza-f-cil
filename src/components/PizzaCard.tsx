@@ -5,7 +5,7 @@ interface PizzaCardProps {
 }
 
 const PizzaCard = ({ name, description, price }: PizzaCardProps) => {
-  const whatsappNumber = "5511999999999"; // Número fictício
+  const whatsappNumber = "5511981627116";
   const message = encodeURIComponent(`Olá! Quero pedir a pizza ${name}.`);
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
 
