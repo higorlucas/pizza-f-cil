@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ShoppingCart, Minus, Plus, Trash2, X } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ShoppingCart, Minus, Plus, Trash2 } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -42,6 +42,9 @@ const CartDrawer = () => {
             <ShoppingCart className="h-5 w-5" />
             Seu Carrinho ({itemCount})
           </SheetTitle>
+          <SheetDescription className="sr-only">
+            Gerencie os itens do seu pedido
+          </SheetDescription>
         </SheetHeader>
 
         {items.length === 0 ? (
