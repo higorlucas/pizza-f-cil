@@ -1,8 +1,16 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import MenuSection from "@/components/MenuSection";
-import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
-import { pizzasTradicionais, pizzasEspeciais, pizzasDoces, bebidas, cervejas, esfihas, porcoes } from "@/data/pizzas";
+import MenuSectionNew from "@/components/MenuSectionNew";
+import CartDrawer from "@/components/CartDrawer";
+import { 
+  pizzasTradicionais, 
+  pizzasEspeciais, 
+  pizzasDoces, 
+  bebidas, 
+  cervejasItems, 
+  esfihas, 
+  porcoes 
+} from "@/data/menuData";
 
 const Index = () => {
   return (
@@ -10,50 +18,50 @@ const Index = () => {
       <Header />
       
       <main className="flex-1 px-4 py-8 max-w-2xl mx-auto w-full">
-        <MenuSection
+        <MenuSectionNew
           title="Pizzas Tradicionais"
           emoji="🍕"
-          pizzas={pizzasTradicionais}
+          items={pizzasTradicionais}
         />
         
-        <MenuSection
+        <MenuSectionNew
           title="Pizzas Especiais"
           emoji="⭐"
-          pizzas={pizzasEspeciais}
+          items={pizzasEspeciais}
         />
         
-        <MenuSection
+        <MenuSectionNew
           title="Pizzas Doces"
           emoji="🍫"
-          pizzas={pizzasDoces}
+          items={pizzasDoces}
         />
         
-        <MenuSection
+        <MenuSectionNew
           title="Refrigerantes"
           emoji="🥤"
-          pizzas={bebidas}
+          items={bebidas}
         />
         
-        <MenuSection
+        <MenuSectionNew
           title="Cervejas"
           emoji="🍺"
-          pizzas={cervejas}
+          items={cervejasItems}
         />
         
-        <MenuSection
+        <MenuSectionNew
           title="Esfihas"
           emoji="🥟"
-          pizzas={esfihas}
+          items={esfihas}
         />
         
-        <MenuSection
+        <MenuSectionNew
           title="Porções"
           emoji="🍟"
-          pizzas={porcoes}
+          items={porcoes}
         />
       </main>
       
-      <WhatsAppFloatingButton />
+      <CartDrawer />
       <Footer />
     </div>
   );
