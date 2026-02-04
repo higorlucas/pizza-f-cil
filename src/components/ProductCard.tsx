@@ -1,8 +1,10 @@
-import { Plus } from "lucide-react";
+import { useState } from "react";
+import { Plus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { MenuItem } from "@/data/menuData";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   item: MenuItem;
@@ -10,14 +12,24 @@ interface ProductCardProps {
 
 const ProductCard = ({ item }: ProductCardProps) => {
   const { addItem } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = () => {
+    setIsAdding(true);
+    
     addItem({
       id: item.id,
       name: item.name,
       price: item.price,
       category: item.category,
     });
+
+    toast.success(`${item.name} adicionado!`, {
+      description: "Veja no carrinho para finalizar",
+      duration: 2000,
+    });
+
+    setTimeout(() => setIsAdding(false), 600);
   };
 
   return (
@@ -43,11 +55,23 @@ const ProductCard = ({ item }: ProductCardProps) => {
         
         <Button 
           onClick={handleAddToCart}
-          className="whatsapp-button mt-1 h-auto p-3"
+          className={`whatsapp-button mt-1 h-auto p-3 transition-all duration-300 ${
+            isAdding ? "bg-green-500 hover:bg-green-500 scale-105" : ""
+          }`}
           variant="ghost"
+          disabled={isAdding}
         >
-          <Plus className="h-4 w-4" />
-          Adicionar
+          {isAdding ? (
+            <>
+              <Check className="h-4 w-4 animate-scale-in" />
+              Adicionado!
+            </>
+          ) : (
+            <>
+              <Plus className="h-4 w-4" />
+              Adicionar
+            </>
+          )}
         </Button>
       </div>
     </div>
