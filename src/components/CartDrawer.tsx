@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useCallback, lazy, Suspense } from "react";
 import { ShoppingCart, Minus, Plus, Trash2 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -6,22 +6,86 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCart } from "@/contexts/CartContext";
-import UpsellSection from "./UpsellSection";
-import CheckoutForm from "./CheckoutForm";
+
+// Lazy load heavier components
+const UpsellSection = lazy(() => import("./UpsellSection"));
+const CheckoutForm = lazy(() => import("./CheckoutForm"));
+
+// Memoized cart item component
+const CartItem = memo(({ 
+  item, 
+  onUpdateQuantity, 
+  onRemove,
+  formatPrice 
+}: { 
+  item: { id: string; name: string; price: number; quantity: number; category: string };
+  onUpdateQuantity: (id: string, qty: number) => void;
+  onRemove: (id: string) => void;
+  formatPrice: (price: number) => string;
+}) => (
+  <div className="flex items-center gap-3 p-3 bg-card rounded-lg border">
+    <div className="flex-1 min-w-0">
+      <p className="font-medium text-sm truncate">{item.name}</p>
+      <p className="text-xs text-muted-foreground">{item.category}</p>
+      <p className="text-sm font-semibold text-primary mt-1">
+        {formatPrice(item.price * item.quantity)}
+      </p>
+    </div>
+    
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-8 w-8"
+        onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+      >
+        <Minus className="h-3 w-3" />
+      </Button>
+      <span className="w-8 text-center font-medium">{item.quantity}</span>
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-8 w-8"
+        onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+      >
+        <Plus className="h-3 w-3" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8 text-destructive hover:text-destructive"
+        onClick={() => onRemove(item.id)}
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </div>
+  </div>
+));
+
+CartItem.displayName = "CartItem";
 
 const CartDrawer = () => {
   const { items, total, itemCount, updateQuantity, removeItem } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const formatPrice = (price: number) => {
+  const formatPrice = useCallback((price: number) => {
     return price.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
     });
-  };
+  }, []);
+
+  const handleUpdateQuantity = useCallback((id: string, qty: number) => {
+    updateQuantity(id, qty);
+  }, [updateQuantity]);
+
+  const handleRemoveItem = useCallback((id: string) => {
+    removeItem(id);
+  }, [removeItem]);
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button 
           className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 bg-primary hover:bg-primary/90"
@@ -29,7 +93,7 @@ const CartDrawer = () => {
         >
           <ShoppingCart className="h-6 w-6" />
           {itemCount > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center bg-accent text-accent-foreground">
+            <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center bg-accent text-accent-foreground animate-scale-in">
               {itemCount}
             </Badge>
           )}
@@ -56,7 +120,9 @@ const CartDrawer = () => {
             </p>
           </div>
         ) : showCheckout ? (
-          <CheckoutForm onBack={() => setShowCheckout(false)} />
+          <Suspense fallback={<div className="flex-1 flex items-center justify-center"><p>Carregando...</p></div>}>
+            <CheckoutForm onBack={() => setShowCheckout(false)} />
+          </Suspense>
         ) : (
           <>
             <ScrollArea className="flex-1">
@@ -64,53 +130,22 @@ const CartDrawer = () => {
                 {/* Itens do carrinho */}
                 <div className="space-y-3">
                   {items.map((item) => (
-                    <div
+                    <CartItem
                       key={item.id}
-                      className="flex items-center gap-3 p-3 bg-card rounded-lg border"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">{item.category}</p>
-                        <p className="text-sm font-semibold text-primary mt-1">
-                          {formatPrice(item.price * item.quantity)}
-                        </p>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <span className="w-8 text-center font-medium">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-destructive hover:text-destructive"
-                          onClick={() => removeItem(item.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+                      item={item}
+                      onUpdateQuantity={handleUpdateQuantity}
+                      onRemove={handleRemoveItem}
+                      formatPrice={formatPrice}
+                    />
                   ))}
                 </div>
 
                 <Separator />
 
                 {/* Sugestões de upsell */}
-                <UpsellSection />
+                <Suspense fallback={<div className="h-32 flex items-center justify-center"><p className="text-sm text-muted-foreground">Carregando sugestões...</p></div>}>
+                  <UpsellSection />
+                </Suspense>
               </div>
             </ScrollArea>
 
