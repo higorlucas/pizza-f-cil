@@ -3,9 +3,12 @@ import Footer from "@/components/Footer";
 import MenuSectionNew from "@/components/MenuSectionNew";
 import CartDrawer from "@/components/CartDrawer";
 import { 
+  promocoes,
   pizzasTradicionais, 
   pizzasEspeciais, 
   pizzasDoces, 
+  vegetariana,
+  pizzasSaboresQueijos,
   bebidas, 
   cervejasItems, 
   esfihas, 
@@ -18,6 +21,12 @@ const Index = () => {
       <Header />
       
       <main className="flex-1 px-4 py-8 max-w-2xl mx-auto w-full">
+        <MenuSectionNew
+          title="Promoções"
+          emoji="🔥"
+          items={promocoes}
+        />
+
         <MenuSectionNew
           title="Pizzas Tradicionais"
           emoji="🍕"
@@ -34,6 +43,18 @@ const Index = () => {
           title="Pizzas Doces"
           emoji="🍫"
           items={pizzasDoces}
+        />
+
+        <MenuSectionNew
+          title="Vegetariana"
+          emoji="🥬"
+          items={vegetariana}
+        />
+
+        <MenuSectionNew
+          title="Pizzas Sabores Queijos"
+          emoji="🧀"
+          items={pizzasSaboresQueijos}
         />
         
         <MenuSectionNew
