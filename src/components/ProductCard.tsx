@@ -5,6 +5,8 @@ import { useCart } from "@/contexts/CartContext";
 import { MenuItem } from "@/data/menuData";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { toast } from "sonner";
+import { hasFlavors } from "@/data/flavorsData";
+import FlavorSelectionModal from "./FlavorSelectionModal";
 
 interface ProductCardProps {
   item: MenuItem;
@@ -13,10 +15,18 @@ interface ProductCardProps {
 const ProductCard = ({ item }: ProductCardProps) => {
   const { addItem } = useCart();
   const [isAdding, setIsAdding] = useState(false);
+  const [showFlavorModal, setShowFlavorModal] = useState(false);
 
-  const handleAddToCart = () => {
+  const isPizza = hasFlavors(item.category);
+
+  const handleClick = () => {
+    if (isPizza) {
+      setShowFlavorModal(true);
+      return;
+    }
+
+    // Direct add for non-pizza items
     setIsAdding(true);
-    
     addItem({
       id: item.id,
       name: item.name,
@@ -33,48 +43,60 @@ const ProductCard = ({ item }: ProductCardProps) => {
   };
 
   return (
-    <div className="pizza-card overflow-hidden">
-      <AspectRatio ratio={4 / 3} className="bg-muted rounded-lg overflow-hidden mb-3">
-        <img
-          src={item.image}
-          alt={item.name}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          loading="lazy"
-        />
-      </AspectRatio>
-      
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-start gap-2">
-          <h3 className="font-semibold text-lg text-foreground">{item.name}</h3>
-          <span className="price-tag whitespace-nowrap">{item.priceFormatted}</span>
+    <>
+      <div className="pizza-card overflow-hidden">
+        <AspectRatio ratio={4 / 3} className="bg-muted rounded-lg overflow-hidden mb-3">
+          <img
+            src={item.image}
+            alt={item.name}
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            loading="lazy"
+          />
+        </AspectRatio>
+        
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-semibold text-lg text-foreground">{item.name}</h3>
+            <span className="price-tag whitespace-nowrap">
+              {isPizza ? `A partir de ${item.priceFormatted}` : item.priceFormatted}
+            </span>
+          </div>
+          
+          <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
+            {item.description}
+          </p>
+          
+          <Button 
+            onClick={handleClick}
+            className={`whatsapp-button mt-1 h-auto p-3 transition-all duration-300 ${
+              isAdding ? "bg-green-500 hover:bg-green-500 scale-105" : ""
+            }`}
+            variant="ghost"
+            disabled={isAdding}
+          >
+            {isAdding ? (
+              <>
+                <Check className="h-4 w-4 animate-scale-in" />
+                Adicionado!
+              </>
+            ) : (
+              <>
+                <Plus className="h-4 w-4" />
+                {isPizza ? "Escolher Sabor" : "Adicionar"}
+              </>
+            )}
+          </Button>
         </div>
-        
-        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
-          {item.description}
-        </p>
-        
-        <Button 
-          onClick={handleAddToCart}
-          className={`whatsapp-button mt-1 h-auto p-3 transition-all duration-300 ${
-            isAdding ? "bg-green-500 hover:bg-green-500 scale-105" : ""
-          }`}
-          variant="ghost"
-          disabled={isAdding}
-        >
-          {isAdding ? (
-            <>
-              <Check className="h-4 w-4 animate-scale-in" />
-              Adicionado!
-            </>
-          ) : (
-            <>
-              <Plus className="h-4 w-4" />
-              Adicionar
-            </>
-          )}
-        </Button>
       </div>
-    </div>
+
+      {isPizza && (
+        <FlavorSelectionModal
+          item={item}
+          open={showFlavorModal}
+          onClose={() => setShowFlavorModal(false)}
+        />
+      )}
+    </>
   );
 };
 

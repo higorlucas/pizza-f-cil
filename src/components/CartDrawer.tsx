@@ -18,7 +18,7 @@ const CartItem = memo(({
   onRemove,
   formatPrice 
 }: { 
-  item: { id: string; name: string; price: number; quantity: number; category: string };
+  item: { id: string; name: string; price: number; quantity: number; category: string; details?: string };
   onUpdateQuantity: (id: string, qty: number) => void;
   onRemove: (id: string) => void;
   formatPrice: (price: number) => string;
@@ -27,6 +27,7 @@ const CartItem = memo(({
     <div className="flex-1 min-w-0">
       <p className="font-medium text-sm truncate">{item.name}</p>
       <p className="text-xs text-muted-foreground">{item.category}</p>
+      {item.details && <p className="text-xs text-muted-foreground italic">{item.details}</p>}
       <p className="text-sm font-semibold text-primary mt-1">
         {formatPrice(item.price * item.quantity)}
       </p>
